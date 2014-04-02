@@ -12,8 +12,9 @@ persistence_root_dir=mydir+'\\AppData\\LocalLow\\Cherry Online Game\\Blade Of Dr
 persistence_bundle_dir=persistence_root_dir + 'AssetBundle\\'
 persistence_Design_dir=persistence_root_dir + 'Design\\'
 
-project_dir='D:\\Workspace\\projects\\game\\trunk\\mobile_fight\\frontend\\BladeOfDragon\\Assets\\'
-custom_root_dir=project_dir+'CustomAssetBundle'
+#project_dir='D:\\Workspace\\projects\\game\\trunk\\mobile_fight\\frontend\\BladeOfDragon\\Assets\\'
+project_dir='D:\\Workspace\\projects\\game\\trunk\\DragonBlade\\Dev\\frontend\\BladeOfDragon\\Assets\\'
+custom_root_dir=os.path.join(project_dir,'CustomAssetBundle')
 
 def copy_spec_file(srcdir, targetdir, filter=None):
     is_filter_ok=False
@@ -72,7 +73,7 @@ def deploy_bundle():
 print("==============begin")
 
 try:
-    opts,args=getopt.getopt(sys.argv[1:], 'pdv:h',['prepare','deploy','help','verbose='])
+    opts,args=getopt.getopt(sys.argv[1:], 'pdv:ht',['prepare','deploy','help','verbose=','test'])
     print(opts)
     for o,a in opts:
         if o in  ('-p', '--prepare'):
@@ -81,6 +82,8 @@ try:
         elif o in ('-d','--deploy'):
             print('call deploy')
             deploy_bundle()
+        elif o in ('-t','--test'):
+             print(__name__)
         elif o in ('-h','--help'):
             print('-p, --prepare prepare for RemakeVersionList\n-d, --deploy finally deploy the bundles\n')
 except getopt.GetoptError:
