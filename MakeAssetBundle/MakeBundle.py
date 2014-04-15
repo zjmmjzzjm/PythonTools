@@ -1,5 +1,6 @@
 #encoding: UTF-8
 import os,shutil,sys,re,getopt
+import time
 #C://user/zjm
 mydir=os.path.expanduser('~')
 latest_vesion_name='LatestVersionListV2.txt'
@@ -15,8 +16,13 @@ persistence_Design_dir=persistence_root_dir + 'Design\\'
 #project_dir='D:\\Workspace\\projects\\game\\trunk\\mobile_fight\\frontend\\BladeOfDragon\\Assets\\'
 project_dir='D:\\Workspace\\projects\\game\\trunk\\DragonBlade\\Dev\\frontend\\BladeOfDragon\\Assets\\'
 custom_root_dir=os.path.join(project_dir,'CustomAssetBundle')
+custom_design_dir=os.path.join(custom_root_dir, time.strftime('%Y_%m_%d',time.localtime(time.time())))
 
 def copy_spec_file(srcdir, targetdir, filter=None):
+    print("copy files: " + srcdir + "==>" + targetdir)
+    if(not os.path.isdir(srcdir)):
+        return ;
+
     is_filter_ok=False
     if (filter is None) == False:
         pattern=re.compile(filter)
@@ -54,6 +60,8 @@ def prepare_for_version_list():
     copy_spec_file(web_bundle_dir, persistence_bundle_dir, r'.*unity3d$' )
     #override new bundle file
     copy_spec_file(custom_root_dir, persistence_bundle_dir, r'.*unity3d$' )
+    #copy design dir
+    copy_spec_file(custom_design_dir,persistence_Design_dir, r'.*.gd$')
 
 #next you should RemakeVersionList
 def deploy_bundle():
@@ -64,10 +72,14 @@ def deploy_bundle():
     else:
         print("not a file")
 
+    print("Cleaning web_bundle_dir :\n " + web_bundle_dir)
     remove_files_in_dir(web_bundle_dir)
+    print("Copy version list to web_bundle_dir : \n" + verlist + " --> " + web_bundle_dir)
     shutil.copy(verlist, web_bundle_dir)
+    print("Copy desgin files : \n" + persistence_Design_dir + " --> " + web_design_dir)
     copy_spec_file(persistence_Design_dir, web_design_dir)
 
+    print("Copy bundle files :\n " + custom_root_dir + " --> " + web_bundle_dir)
     copy_spec_file(custom_root_dir, web_bundle_dir, r'.*unity3d$' )
 
 print("==============begin")
